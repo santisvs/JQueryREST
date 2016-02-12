@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backoffice Client</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="css/jqm-demos.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+
+    <!-- PAGE HOME -->
+    <div data-role="page" id="home">
+        <div data-role="header" data-position="fixed">
+            <h1>Backend Client</h1>
+        </div>
+        <div data-role="content">
+            <ul id="persona_home" data-role="listview" data-filter="true">
+                <li>cargando personas...</li>
+            </ul>
+        </div>
+        <div data-role="footer">
+            Contacta y lo que sea...
+        </div>
+    </div>
+    <!-- end:PAGE HOME -->
+
+
+    <!-- PAGE DETALLE -->
+    <div data-role="page" id="detalle">
+        <div data-role="header">
+
+
+            <a data-rel="back">Volver</a>
+            <h1>Detalle</h1>
+            <a href="#nuevo" class="ui-btn ui-shadow 
+            ui-corner-all ui-icon-plus ui-btn-icon-notext">Nuevo</a>
+
+
+        </div>
+        <div data-role="content">
+
+            <div class="ui-field-contain">
+                
+                <img name="foto" required id="foto" src="" alt="" style="width:50px;height:50px;">
+                
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" required id="nombre" placeholder="Escribe tu nombre" value="">
+
+                <label for="email">Email</label>
+                <input type="email" name="email" required id="email" placeholder="tu@email.com" value="">
+            </div>
+
+
+            <button class="ui-btn ui-corner-all">Modificar</button>
+
+
+        </div>
+        <div data-role="footer">
+            Contacta y lo que sea...
+        </div>
+    </div>
+    <!-- end:PAGE DETALLE -->
+
+    
+    <!-- PAGE USUARIO NUEVO -->
+    <div data-role="page" id="nuevo">
+        <div data-role="header">
+
+
+            <a data-rel="back">Volver</a>
+            <h1>Nuevo</h1>
+            <a href="#home" class="ui-btn ui-shadow 
+            ui-corner-all ui-icon-home ui-btn-icon-notext">Home</a>
+
+
+        </div>
+        <div data-role="content">
+
+            <div class="ui-field-contain">
+                <input class="imgContain ui-btn ui-icon-user ui-btn-icon-left" type="file"  name="foto" required id="foto" >
+                
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" required id="nombre" placeholder="Escribe tu nombre" value="">
+
+                <label for="email">Email</label>
+                <input type="email" name="email" required id="email" placeholder="tu@email.com" value="">
+            </div>
+
+
+            <button class="ui-btn ui-corner-all">Enviar</button>
+
+
+        </div>
+        <div data-role="footer">
+            Contacta y lo que sea...
+        </div>
+    </div>
+    <!-- end:PAGE DETALLE -->
+    
+    
+    
+    
+    
+    
+ <script>
+        
+		var servicio = "http://jsonplaceholder.typicode.com/";
+		var personas = [];
+        var imagenes = [];
+        var imagen_selec;
+		var persona_selec;
+     /* Antes de carga la HOME, llamar al servicio y rellenar lista */
+		$(document).on("pagebeforeshow", "#home", function() {
+			personas = [];
+            imagenes = [];
+			
+            /*Cargamos en personas[] el JSON y visualizamos la lista personas*/
+            $.get(servicio + "users", function(data) {
+				var output = '';
+				$.each(data, function(index, value) {
+					output += '<li><a href="#">' + value.name + '</a></li>';
+					personas.push(value);
+				});
+				$('#persona_home').html(output).listview("refresh");
+			});
+            
+            /*Cargamos en imagenes[] el JSON*/
+            $.get(servicio + "photos", function(data) {
+				$.each(data, function(index, value) {
+					imagenes.push(value);
+				});
+			});
+		});
+     
+     
+     
+     $(document).on("pagebeforeshow", "#detalle", function() {
+         $('#foto').attr("src",imagen_selec.thumbnailUrl);
+         $('#nombre').val(persona_selec.name);
+         $('#email').val(persona_selec.email);
+     });
+     
+     //document ready
+     $(function(){
+         /* Detectar click en listado perros HOME */
+		$('#persona_home').on('vclick', 'li', function(event){
+			persona_selec = personas[ $(this).index() ];
+            imagen_selec = imagenes[ $(this).index() ];
+			$.mobile.navigate("#detalle");
+		});
+     });
+     
+     
+     
+     
+     
+    </script>
+
+</body>
+    
+   
+
+</html>
